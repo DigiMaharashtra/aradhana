@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Aradhana Fashions - Luxury Ethnic & Western Wear Online Store">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="white">
+  <meta name="apple-mobile-web-app-title" content="Aradhana Fashions">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <title>Aradhana Fashions • Official Online Store</title>
+  <link rel="manifest" href="manifest.json">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+
+  <style id="splash-screen-style">
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #FFFFFF !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    #splash-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #FFFFFF;
+      z-index: 999999;
+      opacity: 1;
+      transition: opacity 0.4s ease-out;
+    }
+
+    /* BIGGER & PROMINENT LOGO SCALING */
+    .splash-logo {
+      width: min(85vw, 380px);
+      max-height: 280px;
+      object-fit: contain;
+      animation: gentlePulse 2s ease-in-out infinite alternate;
+    }
+
+    /* Subtle Modern Loading Bar below Logo */
+    .loading-bar-wrapper {
+      width: min(50vw, 160px);
+      height: 3px;
+      background-color: #F1F5F9;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 28px;
+    }
+
+    .loading-bar-progress {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #2EA1FF, #0F172A, #2EA1FF);
+      background-size: 200% 100%;
+      animation: loadingSlide 1.4s linear infinite;
+    }
+
+    @keyframes gentlePulse {
+      0% { transform: scale(0.97); opacity: 0.95; }
+      100% { transform: scale(1.0); opacity: 1.0; }
+    }
+
+    @keyframes loadingSlide {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+
+  <script id="splash-screen-script">
+    let isSplashRemoved = false;
+
+    function removeSplashFromWeb() {
+      if (isSplashRemoved) return;
+      isSplashRemoved = true;
+
+      const splash = document.getElementById("splash-container");
+      if (splash) {
+        splash.style.pointerEvents = "none";
+        splash.style.opacity = "0";
+        setTimeout(() => splash.remove(), 450);
+      }
+    }
+
+    // 1. Flutter event when the first frame is painted on screen
+    window.addEventListener("flutter-first-frame", function () {
+      removeSplashFromWeb();
+    });
+
+    // 2. DOM Observer: detects when Flutter inserts its canvas / flutter-view
+    const observer = new MutationObserver(function (mutations, obs) {
+      if (document.querySelector("flutter-view") || document.querySelector("flt-glass-pane") || document.querySelector("canvas")) {
+        removeSplashFromWeb();
+        obs.disconnect();
+      }
+    });
+    observer.observe(document.body || document.documentElement, { childList: true, subtree: true });
+
+    // 3. Safety fallback timer: prevents infinite freeze if network is slow
+    setTimeout(function () {
+      removeSplashFromWeb();
+    }, 6000);
+  </script>
+</head>
+
+<body>
+<!-- Clean Big Splash Screen Container -->
+<div id="splash-container">
+  <picture id="splash">
+    <source srcset="splash/img/light-4x.png 4x, splash/img/light-3x.png 3x, splash/img/light-2x.png 2x, splash/img/light-1x.png 1x">
+    <img class="splash-logo" src="splash/img/light-4x.png" alt="Aradhana Fashions Logo" onerror="this.src='splash/img/light-1x.png'">
+  </picture>
+
+  <!-- Progress Indicator -->
+  <div class="loading-bar-wrapper">
+    <div class="loading-bar-progress"></div>
+  </div>
+</div>
+
+<script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
